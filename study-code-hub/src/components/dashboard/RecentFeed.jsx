@@ -1,7 +1,7 @@
 import { Code2, FileText, History } from 'lucide-react';
 import GlassCard from '../ui/GlassCard.jsx';
 import Badge from '../ui/Badge.jsx';
-import { formatDateTime } from '../../utils/dates.js';
+import { timeAgo } from '../../utils/dates.js';
 
 /**
  * "Zuletzt im Hub": kombinierter Feed aus Notizen + Snippets,
@@ -52,7 +52,7 @@ export default function RecentFeed({ notes, snippets, onNavigate }) {
                       {item.title}
                     </span>
                     <span className="font-mono text-[11px] text-ink-low">
-                      {formatDateTime(item.updatedAt)}
+                      {timeAgo(item.updatedAt)}
                     </span>
                   </span>
                   <Badge color={isNote ? 'violet' : 'cyan'}>{item.subject}</Badge>

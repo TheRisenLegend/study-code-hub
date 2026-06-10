@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { Check, Copy, Pencil, Trash2 } from 'lucide-react';
 import GlassCard from '../ui/GlassCard.jsx';
 import Badge from '../ui/Badge.jsx';
-import { formatDateTime } from '../../utils/dates.js';
+import { timeAgo } from '../../utils/dates.js';
 
 /**
  * Code-Snippet-Karte (cyan = Code-Semantik).
- * Klick auf den Titel öffnet die große Lese-Ansicht; Copy-Button
- * mit Häkchen-Feedback; Code-Block mit eigenem Scrollbereich.
+ * Header im Editor-Stil mit Sprache, Copy-Button (mit Häkchen-Feedback)
+ * und Aktionen; darunter der Code-Block mit eigenem Scrollbereich.
  */
-export default function SnippetCard({ snippet, onOpen, onEdit, onDelete }) {
+export default function SnippetCard({ snippet, onEdit, onDelete }) {
   const [copied, setCopied] = useState(false);
 
   const copy = async () => {
@@ -28,13 +28,9 @@ export default function SnippetCard({ snippet, onOpen, onEdit, onDelete }) {
       {/* Header im Editor-Tab-Stil */}
       <div className="flex items-center gap-2 border-b border-line px-4 py-3">
         <Badge color="cyan">{snippet.language}</Badge>
-        <button
-          onClick={() => onOpen(snippet)}
-          className="min-w-0 flex-1 truncate text-left font-display text-sm font-semibold transition-colors hover:text-neon-cyan"
-          title="Snippet öffnen"
-        >
+        <h3 className="min-w-0 flex-1 truncate font-display text-sm font-semibold">
           {snippet.title}
-        </button>
+        </h3>
 
         <button
           onClick={copy}
@@ -79,7 +75,7 @@ export default function SnippetCard({ snippet, onOpen, onEdit, onDelete }) {
         </p>
         <span className="flex shrink-0 items-center gap-2 font-mono text-[11px] text-ink-low">
           <Badge>{snippet.subject}</Badge>
-          {formatDateTime(snippet.updatedAt)}
+          {timeAgo(snippet.updatedAt)}
         </span>
       </div>
     </GlassCard>

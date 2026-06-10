@@ -19,17 +19,6 @@ export function formatDate(dateStr) {
   });
 }
 
-/** Timestamp (ms) → echtes Datum mit Uhrzeit: '10.06.26, 14:32' */
-export function formatDateTime(ts) {
-  return new Date(ts).toLocaleString('de-DE', {
-    day: '2-digit',
-    month: '2-digit',
-    year: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
 /** Timestamp (ms) → 'gerade eben' / 'vor 5 Min.' / 'vor 3 Std.' / 'vor 2 Tagen' */
 export function timeAgo(ts) {
   const diff = Date.now() - ts;

@@ -65,7 +65,7 @@ export default function Sidebar({ items, view, onNavigate }) {
       {/* Status-Footer */}
       <div className="flex items-center gap-2 border-t border-line px-5 py-4 font-mono text-[10px] uppercase tracking-widest text-ink-low">
         <span className="h-1.5 w-1.5 animate-pulse-soft rounded-full bg-neon-green shadow-glow-green" />
-        v0.2 · localStorage
+        v0.1 · localStorage
       </div>
     </aside>
   );

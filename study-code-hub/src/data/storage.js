@@ -1,7 +1,7 @@
 /**
  * =====================================================================
  * STORAGE-SERVICE — die einzige Stelle, an der Daten gelesen/geschrieben
- * werden. Aktuell: localStorage.
+ * werden. Aktuell: localStorage. 
  *
  * >>> BACKEND SPÄTER ANBINDEN <<<
  * Wenn ihr irgendwann ein echtes Backend wollt (z. B. Supabase, Firebase
@@ -45,22 +45,10 @@ export function saveCollection(key, data) {
 /* =====================================================================
  * SEED-DATEN — damit die App beim ersten Start direkt "lebt".
  * Kann alles gelöscht/überschrieben werden.
- *
- * Zeitstempel sind RELATIV zum echten ersten Start (Date.now() − x),
- * damit nirgends ein erfundenes festes Datum auftaucht. Alles, was
- * danach angelegt wird, bekommt in App.jsx ebenfalls die echte
- * Gerätezeit (Date.now()).
  * ===================================================================== */
 
 const h = 3_600_000; // eine Stunde in ms
 const now = Date.now();
-
-/** 'YYYY-MM-DD' relativ zu heute — für To-Do-Beispieltermine. */
-const inDays = (n) => {
-  const d = new Date();
-  d.setDate(d.getDate() + n);
-  return d.toISOString().slice(0, 10);
-};
 
 export const SEED_EXAMS = [
   { id: 'ex-gbi', subject: 'GBI', date: '2026-06-25' },
@@ -70,20 +58,18 @@ export const SEED_EXAMS = [
   { id: 'ex-prog2', subject: 'Prog2', date: '2026-07-09' },
 ];
 
-/* Notiz-Inhalte sind seit dem Rich-Text-Editor HTML.
-   (Alte Plain-Text-Notizen werden beim Öffnen automatisch konvertiert.) */
 export const SEED_NOTES = [
   {
     id: 'n-1',
     title: 'Partielle Integration – Rezept',
     subject: 'Analysis',
     content:
-      `<p><b>Formel:</b> ∫ u·v′ dx = u·v − ∫ u′·v dx</p>` +
-      `<p>Wahl von u nach <b>LIATE</b>: Logarithmus → Inverse → Algebraisch → Trigonometrisch → Exponentiell.<br>` +
-      `Faustregel: u so wählen, dass es beim Ableiten einfacher wird.</p>` +
-      `<p><b>Beispiel:</b> ∫ x·e<sup>x</sup> dx&nbsp;&nbsp;| u = x, v′ = e<sup>x</sup><br>` +
-      `= x·e<sup>x</sup> − ∫ 1·e<sup>x</sup> dx&nbsp;&nbsp;| ∫ e<sup>x</sup> dx = e<sup>x</sup><br>` +
-      `= <span style="color:#4ade80">e<sup>x</sup>·(x − 1) + C</span></p>`,
+      'Formel: ∫ u·v\u2032 dx = u·v − ∫ u\u2032·v dx\n\n' +
+      'Wahl von u nach LIATE: Logarithmus → Inverse → Algebraisch → Trigonometrisch → Exponentiell.\n' +
+      'Faustregel: u so wählen, dass es beim Ableiten einfacher wird.\n\n' +
+      'Beispiel: ∫ x·e^x dx  | u = x, v\u2032 = e^x\n' +
+      '= x·e^x − ∫ 1·e^x dx  | ∫ e^x dx = e^x\n' +
+      '= e^x·(x − 1) + C',
     updatedAt: now - 5 * h,
   },
   {
@@ -91,12 +77,10 @@ export const SEED_NOTES = [
     title: 'BPMN: Gateways im Überblick',
     subject: 'GBI',
     content:
-      `<ul>` +
-      `<li><b style="color:#2dd9f5">XOR (×)</b>: exklusiv — genau <u>ein</u> ausgehender Pfad, Bedingung entscheidet.</li>` +
-      `<li><b style="color:#a78bfa">AND (+)</b>: parallel — alle Pfade gleichzeitig, Join wartet auf alle.</li>` +
-      `<li><b style="color:#4ade80">OR (○)</b>: inklusiv — ein oder mehrere Pfade, Join wartet auf alle aktivierten.</li>` +
-      `</ul>` +
-      `<p><b>Klausur-Klassiker:</b> Jedes öffnende Gateway braucht ein passendes schließendes (gleicher Typ!).</p>`,
+      'XOR (×): exklusiv — genau EIN ausgehender Pfad, Bedingung entscheidet.\n' +
+      'AND (+): parallel — ALLE Pfade gleichzeitig, Join wartet auf alle.\n' +
+      'OR (○): inklusiv — ein ODER mehrere Pfade, Join wartet auf alle aktivierten.\n\n' +
+      'Klausur-Klassiker: Jedes öffnende Gateway braucht ein passendes schließendes (gleicher Typ!).',
     updatedAt: now - 22 * h,
   },
   {
@@ -104,13 +88,11 @@ export const SEED_NOTES = [
     title: 'Buchungssatz-Grundmuster',
     subject: 'BuB',
     content:
-      `<p>Immer: <b>Soll an Haben.</b></p>` +
-      `<ul>` +
-      `<li>Aktivkonto: Mehrung im Soll, Minderung im Haben.</li>` +
-      `<li>Passivkonto: Mehrung im Haben, Minderung im Soll.</li>` +
-      `</ul>` +
-      `<p><b>Beispiel</b> Wareneinkauf auf Ziel:<br>` +
-      `Wareneingang (Aufwand, Soll) an Verbindlichkeiten a. LL. (Passiv, Haben)</p>`,
+      'Immer: Soll an Haben.\n\n' +
+      'Aktivkonto:  Mehrung im Soll, Minderung im Haben.\n' +
+      'Passivkonto: Mehrung im Haben, Minderung im Soll.\n\n' +
+      'Beispiel Wareneinkauf auf Ziel:\n' +
+      'Wareneingang (Aufwand, Soll) an Verbindlichkeiten a. LL. (Passiv, Haben)',
     updatedAt: now - 49 * h,
   },
 ];
@@ -168,29 +150,5 @@ export const SEED_SNIPPETS = [
       '    return Objects.hash(name, alter);\n' +
       '}',
     updatedAt: now - 70 * h,
-  },
-];
-
-export const SEED_TODOS = [
-  {
-    id: 't-1',
-    text: 'GBI: Altklausur 2024 komplett durchrechnen',
-    due: inDays(3),
-    done: false,
-    createdAt: now - 3 * h,
-  },
-  {
-    id: 't-2',
-    text: 'DIA: Normalformen-Übersicht in Notiz packen',
-    due: inDays(7),
-    done: false,
-    createdAt: now - 20 * h,
-  },
-  {
-    id: 't-3',
-    text: 'Karteikarten Prog2 anlegen',
-    due: null,
-    done: true,
-    createdAt: now - 60 * h,
   },
 ];

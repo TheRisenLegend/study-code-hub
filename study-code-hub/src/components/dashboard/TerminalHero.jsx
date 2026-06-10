@@ -8,7 +8,7 @@ import { timeAgo } from '../../utils/dates.js';
  * "Output" des Befehls ist die wichtigste Info überhaupt — der Countdown
  * zur nächsten Klausur — plus eine getippte Statuszeile mit Live-Daten.
  */
-export default function TerminalHero({ exams, notes, snippets, todos = [] }) {
+export default function TerminalHero({ exams, notes, snippets }) {
   const reduced = useReducedMotion();
 
   // Nächste anstehende Klausur ermitteln (heute zählt noch als anstehend)
@@ -32,11 +32,9 @@ export default function TerminalHero({ exams, notes, snippets, todos = [] }) {
     ...notes.map((n) => n.updatedAt),
     ...snippets.map((s) => s.updatedAt)
   );
-  const openTodos = todos.filter((t) => !t.done).length;
   const status =
     `${notes.length} ${notes.length === 1 ? 'notiz' : 'notizen'} · ` +
-    `${snippets.length} ${snippets.length === 1 ? 'snippet' : 'snippets'} · ` +
-    `${openTodos} to-do${openTodos === 1 ? '' : 's'} offen` +
+    `${snippets.length} ${snippets.length === 1 ? 'snippet' : 'snippets'}` +
     (lastChange > 0 ? ` · letzte änderung ${timeAgo(lastChange)}` : '');
 
   const [typed, setTyped] = useState(reduced ? status : '');

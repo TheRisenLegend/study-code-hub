@@ -93,53 +93,6 @@
   .field-label {
     @apply mb-1.5 block font-mono text-[11px] uppercase tracking-widest text-ink-low;
   }
-
-  /* --- Rich-Text-Editor (Notizen) ------------------------------------ */
-  .rt-btn {
-    @apply rounded-lg p-1.5 text-ink-mid transition-colors hover:bg-white/10 hover:text-neon-violet;
-  }
-  .rt-select {
-    @apply rounded-lg border border-line bg-white/5 px-1.5 py-1 font-mono text-[11px] text-ink-mid outline-none [color-scheme:dark] focus:border-neon-violet/50;
-  }
-  .rt-divider {
-    @apply mx-1 h-5 w-px bg-line;
-  }
-  .rt-swatch {
-    @apply mx-0.5 h-4 w-4 rounded-full border border-white/25 transition-transform hover:scale-125;
-  }
-}
-
-/* =====================================================================
- * FORMATIERTER NOTIZ-INHALT
- * Editor (.rt-editor) und Lese-Ansicht teilen sich diese Regeln —
- * Tailwinds Preflight entfernt Listen-Styles, hier kommen sie zurück.
- * ===================================================================== */
-.rich-content p {
-  margin: 0 0 0.45em;
-}
-.rich-content ul {
-  list-style: disc;
-  margin: 0.3em 0 0.6em;
-  padding-left: 1.4em;
-}
-.rich-content ol {
-  list-style: decimal;
-  margin: 0.3em 0 0.6em;
-  padding-left: 1.4em;
-}
-.rich-content li {
-  margin: 0.15em 0;
-}
-.rich-content b,
-.rich-content strong {
-  color: #f4f6ff;
-}
-
-/* Platzhalter für die leere Schreibfläche */
-.rt-editor:empty::before {
-  content: attr(data-placeholder);
-  color: rgba(126, 132, 158, 0.8);
-  pointer-events: none;
 }
 
 /* =====================================================================

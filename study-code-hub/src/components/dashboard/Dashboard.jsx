@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion';
-import { Code2, FileText, ListChecks, Timer } from 'lucide-react';
+import { Code2, FileText, Timer } from 'lucide-react';
 import TerminalHero from './TerminalHero.jsx';
 import StatCard from './StatCard.jsx';
 import ExamCountdown from './ExamCountdown.jsx';
-import TodoList from './TodoList.jsx';
 import RecentFeed from './RecentFeed.jsx';
 import { daysUntil } from '../../utils/dates.js';
 
@@ -18,34 +17,21 @@ const stagger = {
 };
 
 /**
- * Startseite: Terminal-Hero (Signature), vier Kennzahlen, darunter
- * Klausur-Countdown + To-Do-Liste nebeneinander und der Feed.
+ * Startseite: Terminal-Hero (Signature), drei Kennzahlen,
+ * darunter Klausur-Countdown und der "Zuletzt im Hub"-Feed.
  */
-export default function Dashboard({
-  notes,
-  snippets,
-  exams,
-  todos,
-  onNavigate,
-  onAddExam,
-  onDeleteExam,
-  onAddTodo,
-  onToggleTodo,
-  onDeleteTodo,
-}) {
+export default function Dashboard({ notes, snippets, exams, onNavigate, onAddExam, onDeleteExam }) {
   const nextExam = exams
     .map((e) => ({ ...e, days: daysUntil(e.date) }))
     .filter((e) => e.days >= 0)
     .sort((a, b) => a.days - b.days)[0];
 
-  const openTodos = todos.filter((t) => !t.done).length;
-
   return (
     <div className="space-y-6">
-      <TerminalHero exams={exams} notes={notes} snippets={snippets} todos={todos} />
+      <TerminalHero exams={exams} notes={notes} snippets={snippets} />
 
       {/* Kennzahlen — klickbar, farblich nach Inhaltstyp codiert */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <motion.div variants={stagger} initial="hidden" animate="show" custom={0}>
           <StatCard
             icon={FileText}
@@ -73,37 +59,14 @@ export default function Dashboard({
             onClick={() => onNavigate('dashboard')}
           />
         </motion.div>
-        <motion.div variants={stagger} initial="hidden" animate="show" custom={3}>
-          <StatCard
-            icon={ListChecks}
-            value={openTodos}
-            label="offene To-Dos"
-            accent="pink"
-            onClick={() => onNavigate('dashboard')}
-          />
-        </motion.div>
       </div>
 
-      {/* Zwei Spalten ab lg: Klausuren | To-Dos, darunter der Feed */}
+      {/* Zwei Spalten ab lg: Klausuren | Aktivität */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <motion.div variants={stagger} initial="hidden" animate="show" custom={4}>
+        <motion.div variants={stagger} initial="hidden" animate="show" custom={3}>
           <ExamCountdown exams={exams} onAdd={onAddExam} onDelete={onDeleteExam} />
         </motion.div>
-        <motion.div variants={stagger} initial="hidden" animate="show" custom={5}>
-          <TodoList
-            todos={todos}
-            onAdd={onAddTodo}
-            onToggle={onToggleTodo}
-            onDelete={onDeleteTodo}
-          />
-        </motion.div>
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          animate="show"
-          custom={6}
-          className="lg:col-span-2"
-        >
+        <motion.div variants={stagger} initial="hidden" animate="show" custom={4}>
           <RecentFeed notes={notes} snippets={snippets} onNavigate={onNavigate} />
         </motion.div>
       </div>

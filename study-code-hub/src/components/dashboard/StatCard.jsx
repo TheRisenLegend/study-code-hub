@@ -4,7 +4,6 @@ const ACCENT = {
   cyan: { icon: 'border-neon-cyan/30 bg-neon-cyan/10 text-neon-cyan', glow: 'cyan' },
   violet: { icon: 'border-neon-violet/30 bg-neon-violet/10 text-neon-violet', glow: 'violet' },
   green: { icon: 'border-neon-green/30 bg-neon-green/10 text-neon-green', glow: 'green' },
-  pink: { icon: 'border-neon-pink/30 bg-neon-pink/10 text-neon-pink', glow: 'pink' },
 };
 
 /**

@@ -3,20 +3,16 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Code2, Plus, Search } from 'lucide-react';
 import SnippetCard from './SnippetCard.jsx';
 import SnippetModal from './SnippetModal.jsx';
-import SnippetViewer from './SnippetViewer.jsx';
 import NeonButton from '../ui/NeonButton.jsx';
 import EmptyState from '../ui/EmptyState.jsx';
 
 /**
  * Code-Snippets-Bereich: Suche + Sprach-Filter + 2-spaltiges Grid (ab lg).
- * Titel-Klick → große Lese-Ansicht; Erstellen läuft zweistufig
- * (Details → Code im großen Editor).
  */
 export default function SnippetsView({ snippets, onUpsert, onDelete }) {
   const [query, setQuery] = useState('');
   const [langFilter, setLangFilter] = useState('Alle');
-  const [viewer, setViewer] = useState(null);          // Snippet in der Lese-Ansicht
-  const [editor, setEditor] = useState(null);          // { snippet: object|null, startStep: 1|2 }
+  const [modal, setModal] = useState({ open: false, snippet: null });
 
   const languages = useMemo(
     () => [...new Set(snippets.map((s) => s.language))].sort(),
@@ -42,13 +38,8 @@ export default function SnippetsView({ snippets, onUpsert, onDelete }) {
       .sort((a, b) => b.updatedAt - a.updatedAt);
   }, [snippets, query, langFilter]);
 
-  /** Mit Rückfrage löschen; gibt zurück, ob wirklich gelöscht wurde. */
   const remove = (id) => {
-    if (window.confirm('Snippet wirklich löschen?')) {
-      onDelete(id);
-      return true;
-    }
-    return false;
+    if (window.confirm('Snippet wirklich löschen?')) onDelete(id);
   };
 
   return (
@@ -61,7 +52,7 @@ export default function SnippetsView({ snippets, onUpsert, onDelete }) {
             {snippets.length} {snippets.length === 1 ? 'Snippet' : 'Snippets'} · copy &amp; lernen
           </p>
         </div>
-        <NeonButton onClick={() => setEditor({ snippet: null, startStep: 1 })}>
+        <NeonButton onClick={() => setModal({ open: true, snippet: null })}>
           <Plus size={16} /> Neues Snippet
         </NeonButton>
       </div>
@@ -125,8 +116,7 @@ export default function SnippetsView({ snippets, onUpsert, onDelete }) {
               >
                 <SnippetCard
                   snippet={snippet}
-                  onOpen={setViewer}
-                  onEdit={(s) => setEditor({ snippet: s, startStep: 2 })}
+                  onEdit={(s) => setModal({ open: true, snippet: s })}
                   onDelete={remove}
                 />
               </motion.div>
@@ -135,30 +125,14 @@ export default function SnippetsView({ snippets, onUpsert, onDelete }) {
         </motion.div>
       )}
 
-      {/* Lese-Ansicht + Erstellen/Bearbeiten */}
+      {/* Erstellen/Bearbeiten */}
       <AnimatePresence>
-        {viewer && (
-          <SnippetViewer
-            key="viewer"
-            snippet={viewer}
-            onClose={() => setViewer(null)}
-            onEdit={(s) => {
-              setViewer(null);
-              setEditor({ snippet: s, startStep: 2 });
-            }}
-            onDelete={(id) => {
-              if (remove(id)) setViewer(null);
-            }}
-          />
-        )}
-        {editor && (
+        {modal.open && (
           <SnippetModal
-            key="editor"
-            snippet={editor.snippet}
-            startStep={editor.startStep}
+            snippet={modal.snippet}
             subjects={subjects}
             onSave={onUpsert}
-            onClose={() => setEditor(null)}
+            onClose={() => setModal({ open: false, snippet: null })}
           />
         )}
       </AnimatePresence>

@@ -1,31 +1,27 @@
 import { Pencil, Trash2 } from 'lucide-react';
 import GlassCard from '../ui/GlassCard.jsx';
 import Badge from '../ui/Badge.jsx';
-import { formatDateTime } from '../../utils/dates.js';
-import { stripHtml } from '../../utils/html.js';
+import { timeAgo } from '../../utils/dates.js';
 
 /**
  * Einzelne Notiz-Karte (violetter Glow = Notizen-Semantik).
- * Klick auf die Karte öffnet die große Lese-Ansicht,
- * der Stift springt direkt ins Bearbeiten.
+ * Klick auf die Karte öffnet das Bearbeiten-Modal.
  */
-export default function NoteCard({ note, onOpen, onEdit, onDelete }) {
+export default function NoteCard({ note, onEdit, onDelete }) {
   return (
     <GlassCard glow="violet" lift className="group flex h-full flex-col p-5">
       <div className="mb-3 flex items-center justify-between gap-2">
         <Badge color="violet">{note.subject}</Badge>
-        <span className="font-mono text-[11px] text-ink-low">
-          {formatDateTime(note.updatedAt)}
-        </span>
+        <span className="font-mono text-[11px] text-ink-low">{timeAgo(note.updatedAt)}</span>
       </div>
 
-      {/* Titel + Vorschau sind die Klickfläche zum Öffnen */}
-      <button onClick={() => onOpen(note)} className="flex-1 text-left">
+      {/* Titel + Vorschau sind die Klickfläche zum Bearbeiten */}
+      <button onClick={() => onEdit(note)} className="flex-1 text-left">
         <h3 className="font-display font-semibold leading-snug transition-colors group-hover:text-neon-violet">
           {note.title}
         </h3>
         <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-ink-mid line-clamp-4">
-          {stripHtml(note.content)}
+          {note.content}
         </p>
       </button>
 

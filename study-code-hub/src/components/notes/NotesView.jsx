@@ -3,21 +3,18 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { FileText, Plus, Search } from 'lucide-react';
 import NoteCard from './NoteCard.jsx';
 import NoteModal from './NoteModal.jsx';
-import NoteViewer from './NoteViewer.jsx';
 import NeonButton from '../ui/NeonButton.jsx';
 import EmptyState from '../ui/EmptyState.jsx';
-import { stripHtml } from '../../utils/html.js';
 
 /**
  * Notizen-Bereich: Suche + Fach-Filter + responsives Karten-Grid.
- * Karten-Klick → große Lese-Ansicht; Erstellen läuft zweistufig
- * (Details → Inhalt im Rich-Text-Editor).
+ * Erstellen und Bearbeiten laufen über dasselbe Modal.
  */
 export default function NotesView({ notes, onUpsert, onDelete }) {
   const [query, setQuery] = useState('');
   const [subjectFilter, setSubjectFilter] = useState('Alle');
-  const [viewer, setViewer] = useState(null);          // Notiz in der Lese-Ansicht
-  const [editor, setEditor] = useState(null);          // { note: object|null, startStep: 1|2 }
+  // modal: { open: bool, note: object|null } — null = neue Notiz
+  const [modal, setModal] = useState({ open: false, note: null });
 
   // Fach-Chips dynamisch aus den vorhandenen Notizen ableiten
   const subjects = useMemo(
@@ -33,19 +30,14 @@ export default function NotesView({ notes, onUpsert, onDelete }) {
         (n) =>
           !q ||
           n.title.toLowerCase().includes(q) ||
-          stripHtml(n.content).toLowerCase().includes(q) ||
+          n.content.toLowerCase().includes(q) ||
           n.subject.toLowerCase().includes(q)
       )
       .sort((a, b) => b.updatedAt - a.updatedAt);
   }, [notes, query, subjectFilter]);
 
-  /** Mit Rückfrage löschen; gibt zurück, ob wirklich gelöscht wurde. */
   const remove = (id) => {
-    if (window.confirm('Notiz wirklich löschen?')) {
-      onDelete(id);
-      return true;
-    }
-    return false;
+    if (window.confirm('Notiz wirklich löschen?')) onDelete(id);
   };
 
   return (
@@ -58,7 +50,7 @@ export default function NotesView({ notes, onUpsert, onDelete }) {
             {notes.length} {notes.length === 1 ? 'Eintrag' : 'Einträge'} · gemeinsam fürs Semester
           </p>
         </div>
-        <NeonButton onClick={() => setEditor({ note: null, startStep: 1 })}>
+        <NeonButton onClick={() => setModal({ open: true, note: null })}>
           <Plus size={16} /> Neue Notiz
         </NeonButton>
       </div>
@@ -122,8 +114,7 @@ export default function NotesView({ notes, onUpsert, onDelete }) {
               >
                 <NoteCard
                   note={note}
-                  onOpen={setViewer}
-                  onEdit={(n) => setEditor({ note: n, startStep: 2 })}
+                  onEdit={(n) => setModal({ open: true, note: n })}
                   onDelete={remove}
                 />
               </motion.div>
@@ -132,30 +123,14 @@ export default function NotesView({ notes, onUpsert, onDelete }) {
         </motion.div>
       )}
 
-      {/* Lese-Ansicht + Erstellen/Bearbeiten */}
+      {/* Erstellen/Bearbeiten */}
       <AnimatePresence>
-        {viewer && (
-          <NoteViewer
-            key="viewer"
-            note={viewer}
-            onClose={() => setViewer(null)}
-            onEdit={(n) => {
-              setViewer(null);
-              setEditor({ note: n, startStep: 2 });
-            }}
-            onDelete={(id) => {
-              if (remove(id)) setViewer(null);
-            }}
-          />
-        )}
-        {editor && (
+        {modal.open && (
           <NoteModal
-            key="editor"
-            note={editor.note}
-            startStep={editor.startStep}
+            note={modal.note}
             subjects={subjects}
             onSave={onUpsert}
-            onClose={() => setEditor(null)}
+            onClose={() => setModal({ open: false, note: null })}
           />
         )}
       </AnimatePresence>

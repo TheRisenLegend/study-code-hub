@@ -1,17 +1,9 @@
 # Study & Code Hub
 
-Zentrales Dashboard für eine kleine Lerngruppe: Vorlesungsnotizen (mit Rich-Text-Editor),
-Code-Snippets (Java, Datenstrukturen, Algorithmen), Klausur-Countdown und To-Do-Liste —
-plus JSON-Backup zum Sichern und Teilen der Daten mit der Crew.
+Zentrales Dashboard für eine kleine Lerngruppe: Vorlesungsnotizen, Zusammenfassungen
+und Code-Snippets (Java, Datenstrukturen, Algorithmen) teilen — plus Klausur-Countdown.
 
 **Stack:** React 18 + Vite · Tailwind CSS · Framer Motion · LocalStorage (Backend-ready)
-
-## Rechtliches
-
-Im Footer ist eine Vorlage für **Impressum & Datenschutzerklärung** verlinkt
-(`src/components/legal/LegalView.jsx`). Vor dem Veröffentlichen unbedingt alle
-Platzhalter in `[ECKIGEN KLAMMERN]` durch echte Angaben ersetzen — die Vorlage
-ersetzt keine Rechtsberatung.
 
 ---
 

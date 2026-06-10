@@ -4,11 +4,9 @@ import { Code2, FileText, LayoutDashboard } from 'lucide-react';
 
 import Sidebar from './components/layout/Sidebar.jsx';
 import MobileNav from './components/layout/MobileNav.jsx';
-import AppFooter from './components/layout/AppFooter.jsx';
 import Dashboard from './components/dashboard/Dashboard.jsx';
 import NotesView from './components/notes/NotesView.jsx';
 import SnippetsView from './components/snippets/SnippetsView.jsx';
-import LegalView from './components/legal/LegalView.jsx';
 
 import { useStoredState } from './hooks/useStoredState.js';
 import {
@@ -16,7 +14,6 @@ import {
   SEED_EXAMS,
   SEED_NOTES,
   SEED_SNIPPETS,
-  SEED_TODOS,
 } from './data/storage.js';
 
 /**
@@ -32,8 +29,8 @@ const NAV_ITEMS = [
 
 export default function App() {
   /* Aktive Ansicht. Bewusst State statt Router: kein Routing-Overhead,
-     keine 404-Probleme auf GitHub Pages. 'legal' (Impressum) ist nur über
-     den Footer erreichbar und taucht deshalb nicht in NAV_ITEMS auf. */
+     keine 404-Probleme auf GitHub Pages. Reicht für 3 Views locker —
+     bei Bedarf später durch react-router (HashRouter) ersetzbar. */
   const [view, setView] = useState('dashboard');
 
   /* Daten leben hier oben und werden über den Storage-Hook automatisch
@@ -41,12 +38,10 @@ export default function App() {
   const [notes, setNotes] = useStoredState('notes', SEED_NOTES);
   const [snippets, setSnippets] = useStoredState('snippets', SEED_SNIPPETS);
   const [exams, setExams] = useStoredState('exams', SEED_EXAMS);
-  const [todos, setTodos] = useStoredState('todos', SEED_TODOS);
 
   /* ----- CRUD-Handler -------------------------------------------------
      upsert = anlegen ODER aktualisieren (je nachdem, ob die id schon
-     existiert). Neue Einträge bekommen id + ECHTEN Zeitstempel des Geräts
-     (Date.now()) hier zentral — kein erfundenes Datum. */
+     existiert). Neue Einträge bekommen id + Zeitstempel hier zentral. */
   const makeUpsert = (setter) => (data) =>
     setter((prev) => {
       const item = { ...data, id: data.id ?? createId(), updatedAt: Date.now() };
@@ -66,24 +61,6 @@ export default function App() {
     );
   const deleteExam = (id) => setExams((prev) => prev.filter((e) => e.id !== id));
 
-  const addTodo = (data) =>
-    setTodos((prev) => [
-      { ...data, id: createId(), done: false, createdAt: Date.now() },
-      ...prev,
-    ]);
-  const toggleTodo = (id) =>
-    setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
-  const deleteTodo = (id) => setTodos((prev) => prev.filter((t) => t.id !== id));
-
-  /* Backup-Import: ersetzt alle Collections (Bestätigung passiert im Footer). */
-  const handleImport = useCallback((parsed) => {
-    const arr = (x) => (Array.isArray(x) ? x : []);
-    setNotes(arr(parsed.notes));
-    setSnippets(arr(parsed.snippets));
-    setExams(arr(parsed.exams));
-    setTodos(arr(parsed.todos));
-  }, [setNotes, setSnippets, setExams, setTodos]);
-
   /* ----- View-Rendering ----------------------------------------------- */
   const VIEWS = {
     dashboard: (
@@ -91,20 +68,15 @@ export default function App() {
         notes={notes}
         snippets={snippets}
         exams={exams}
-        todos={todos}
         onNavigate={setView}
         onAddExam={addExam}
         onDeleteExam={deleteExam}
-        onAddTodo={addTodo}
-        onToggleTodo={toggleTodo}
-        onDeleteTodo={deleteTodo}
       />
     ),
     notes: <NotesView notes={notes} onUpsert={upsertNote} onDelete={deleteNote} />,
     snippets: (
       <SnippetsView snippets={snippets} onUpsert={upsertSnippet} onDelete={deleteSnippet} />
     ),
-    legal: <LegalView onBack={() => setView('dashboard')} />,
   };
 
   return (
@@ -126,15 +98,6 @@ export default function App() {
             {VIEWS[view]}
           </motion.div>
         </AnimatePresence>
-
-        {/* Fußzeile mit Backup + Impressum-Link (auf der Impressum-Seite selbst ausgeblendet) */}
-        {view !== 'legal' && (
-          <AppFooter
-            data={{ notes, snippets, exams, todos }}
-            onImport={handleImport}
-            onOpenLegal={() => setView('legal')}
-          />
-        )}
       </main>
     </div>
   );
