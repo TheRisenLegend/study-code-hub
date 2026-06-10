@@ -1,0 +1,15 @@
+# Abhängigkeiten
+node_modules/
+
+# Build-Output
+dist/
+
+# Logs & lokale Env-Dateien
+*.log
+.env
+.env.*
+
+# Editor-Kram
+.vscode/
+.idea/
+.DS_Store
