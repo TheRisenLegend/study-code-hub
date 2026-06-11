@@ -48,7 +48,7 @@ export default function LegalView({ onBack }) {
           Deutschland
         </p>
         <p className="text-sm leading-relaxed text-ink-mid">
-          Kontakt: <span className="text-ink-hi">[DEINE@MAIL.DE]</span>
+          Kontakt: <span className="text-ink-hi">sansal.ilgaz@gmail.com</span>
         </p>
         <p className="text-sm leading-relaxed text-ink-mid">
           Verantwortlich im Sinne des § 18 Abs. 2 MStV: Sansal Ilgaz,
