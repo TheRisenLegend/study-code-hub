@@ -114,7 +114,7 @@ export default function LegalView({ onBack }) {
         </p>
 
         <p className="mt-6 font-mono text-[11px] text-ink-low">
-          Stand: [MONAT JAHR] · Diese Vorlage ersetzt keine Rechtsberatung.
+          Stand: Juni 2026
         </p>
       </GlassCard>
     </div>
